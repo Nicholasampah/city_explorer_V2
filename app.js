@@ -1,5 +1,5 @@
 var createError = require('http-errors');
-const { engine } = require('express-handlebars');
+const hbs = require('express-handlebars');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -14,9 +14,14 @@ const homeRouter = require("./routes/home");
 
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs', engine({ extname: 'hbs' }));
+app.engine('hbs', hbs.engine({
+  extname: '.hbs',
+  defaultLayout: 'main',
+  layoutsDir: path.join(__dirname, 'views/layouts'),
+  partialsDir: path.join(__dirname, 'views/partials'),
+ }));
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 
 app.use(logger('dev'));
