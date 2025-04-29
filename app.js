@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 var usersRouter = require('./routes/users');
 const homeRouter = require("./routes/home");
+const cityRouter = require("./routes/city");
 
 
 // view engine setup
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', usersRouter);
 app.use('/', homeRouter);
+app.use('/cities/search', cityRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
