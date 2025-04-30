@@ -4,15 +4,25 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
+const dotenv = require('dotenv');
+
+
+
 
 var app = express();
 const PORT = process.env.PORT || 3000;
+dotenv.config();
+
 
 
 var usersRouter = require('./routes/users');
 const homeRouter = require("./routes/home");
 const cityRouter = require("./routes/city");
 
+const connectDB = require('./config/db');
+connectDB();
 
 // view engine setup
 app.engine('hbs', hbs.engine({
@@ -20,6 +30,8 @@ app.engine('hbs', hbs.engine({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views/layouts'),
   partialsDir: path.join(__dirname, 'views/partials'),
+  allowProtoPropertiesByDefault: true,
+  allowProtoMethodsByDefault: true
  }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
