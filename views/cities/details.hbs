@@ -1,0 +1,288 @@
+<div class="city-details">
+  <div class="city-header">
+    <div class="city-header-content">
+      <h1>{{city.name}}</h1>
+      <p class="city-location">{{city.country}}, {{city.continent}}</p>
+      <p>Population: {{formatNumber city.population}} people</p>
+
+      
+      {{#if isAuthenticated}}
+        <div class="favorite-controls">
+          {{#if isFavorite}}
+            <form action="/auth/favorites/{{city._id}}?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-sm btn-favorite active">
+                <i class="icon-heart-filled"></i> Remove from Favorites
+              </button>
+            </form>
+          {{else}}
+            <form action="/auth/favorites/{{city._id}}" method="POST">
+              <button type="submit" class="btn btn-sm btn-favorite">
+                <i class="icon-heart"></i> Add to Favorites
+              </button>
+            </form>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+    
+    <div class="city-header-weather">
+      {{#if city.weather}}
+        <div class="weather-display">
+          <div class="weather-main">
+            <img src="http://openweathermap.org/img/wn/{{city.weather.icon}}@2x.png" alt="{{city.weather.condition}}">
+            <div class="weather-temp">{{city.weather.temperature}}°C</div>
+          </div>
+          <div class="weather-details">
+            <div class="weather-condition">{{city.weather.condition}}</div>
+            <div class="weather-meta">
+              <div class="weather-meta-item">
+                <span class="label">Humidity:</span>
+                <span class="value">{{city.weather.humidity}}%</span>
+              </div>
+              <div class="weather-meta-item">
+                <span class="label">Wind:</span>
+                <span class="value">{{city.weather.windSpeed}} m/s</span>
+              </div>
+            </div>
+            <div class="weather-updated">
+              Updated: {{formatDate city.weather.lastUpdated}}
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <div class="weather-unavailable">
+          <p>Weather data unavailable</p>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  
+  <div class="city-content">
+    <div class="city-main">
+      <section class="city-gallery">
+        <div class="gallery-container">
+          {{#if city.images.length}}
+            <div class="gallery-main">
+              <img src="{{city.images.[0]}}" alt="{{city.name}}" id="mainImage">
+            </div>
+            {{#if (gt city.images.length 1)}}
+              <div class="gallery-thumbnails">
+                {{#each city.images}}
+                  <div class="gallery-thumbnail" data-image="{{this}}">
+                    <img src="{{this}}" alt="{{../city.name}}">
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
+          {{else}}
+            <div class="placeholder-gallery">
+              <div class="placeholder-image">
+                {{city.name.[0]}}
+              </div>
+              <p>No images available</p>
+            </div>
+          {{/if}}
+        </div>
+      </section>
+      
+      <section class="city-overview">
+        <h2>About {{city.name}}</h2>
+        <p class="city-description">{{city.description}}</p>
+        
+        <div class="city-key-facts">
+          <div class="key-fact">
+            <div class="key-fact-label">Population</div>
+            <div class="key-fact-value">{{formatNumber city.population}}</div>
+          </div>
+          
+          <div class="key-fact">
+            <div class="key-fact-label">Continent</div>
+            <div class="key-fact-value">{{city.continent}}</div>
+          </div>
+          
+          <div class="key-fact">
+            <div class="key-fact-label">Country</div>
+            <div class="key-fact-value">{{city.country}}</div>
+          </div>
+          
+          <div class="key-fact">
+            <div class="key-fact-label">Coordinates</div>
+            <div class="key-fact-value">{{city.coordinates.latitude}}, {{city.coordinates.longitude}}</div>
+          </div>
+        </div>
+      </section>
+      
+      {{#if city.landmarks.length}}
+        <section class="city-landmarks">
+          <h2>Key Landmarks</h2>
+          <div class="landmarks-container">
+            {{#each city.landmarks}}
+              <div class="landmark-card">
+                {{#if this.imageUrl}}
+                  <div class="landmark-image">
+                    <img src="{{this.imageUrl}}" alt="{{this.name}}">
+                  </div>
+                {{/if}}
+                <div class="landmark-content">
+                  <h3>{{this.name}}</h3>
+                  <p>{{this.description}}</p>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </section>
+      {{/if}}
+      
+      <section class="city-visualization">
+        <h2>Population Comparison</h2>
+        <div class="chart-container">
+          <canvas id="populationChart"></canvas>
+        </div>
+      </section>
+    </div>
+    
+    <div class="city-sidebar">
+      <div class="city-map">
+        <h3>Location</h3>
+        <div id="cityMap" data-lat="{{city.coordinates.latitude}}" data-lng="{{city.coordinates.longitude}}" data-name="{{city.name}}"></div>
+      </div>
+      
+      {{#if isAdmin}}
+        <div class="admin-controls">
+          <h3>Admin Controls</h3>
+          <div class="admin-buttons">
+            <a href="/cities/{{city._id}}/edit" class="btn btn-secondary">Edit City</a>
+            <form action="/cities/{{city._id}}?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this city?');">
+              <button type="submit" class="btn btn-danger">Delete City</button>
+            </form>
+          </div>
+        </div>
+      {{/if}}
+      
+      <div class="similar-cities">
+        <h3>Similar Cities</h3>
+        <div class="similar-cities-list" id="similarCities">
+          <div class="loading">Loading similar cities...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Population comparison chart
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Get coordinates from data attributes
+    const mapContainer = document.getElementById('cityMap');
+    const lat = parseFloat(mapContainer.getAttribute('data-lat'));
+    const lng = parseFloat(mapContainer.getAttribute('data-lng'));
+    
+    if (lat && lng) {
+      // Initialize the map
+      const map = L.map('cityMap').setView([lat, lng], 13);
+      
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      
+      // Add a marker for the city
+      L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup('{{city.name}}')
+        .openPopup();
+    }
+
+    
+  // Set up the population chart
+  const ctx = document.getElementById('populationChart').getContext('2d');
+  fetch('/api/cities/population-comparison?cityId={{city._id}}')
+    .then(response => response.json())
+    .then(data => {
+      // Creating a population chart with the current city and other cities in the same continent
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Population',
+            data: data.populations,
+            backgroundColor: data.colors,
+            borderColor: data.borderColors,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return new Intl.NumberFormat().format(value);
+                }
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return new Intl.NumberFormat().format(context.raw) + ' people';
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error loading population data:', error);
+      document.getElementById('populationChart').parentNode.innerHTML = '<p>Error loading chart data</p>';
+    });
+  
+  // Load similar cities
+  fetch('/api/cities/similar?cityId={{city._id}}')
+    .then(response => response.json())
+    .then(data => {
+      const similarCitiesContainer = document.getElementById('similarCities');
+      if (data.cities.length > 0) {
+        similarCitiesContainer.innerHTML = '';
+        data.cities.forEach(city => {
+          similarCitiesContainer.innerHTML += `
+            <div class="similar-city">
+              <a href="/cities/${city._id}">
+                <h4>${city.name}</h4>
+                <p>${city.country}</p>
+              </a>
+            </div>
+          `;
+        });
+      } else {
+        similarCitiesContainer.innerHTML = '<p>No similar cities found</p>';
+      }
+    })
+    .catch(error => {
+      console.error('Error loading similar cities:', error);
+      document.getElementById('similarCities').innerHTML = '<p>Error loading similar cities</p>';
+    });
+  
+  // Initialize image gallery
+  const mainImage = document.getElementById('mainImage');
+  const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+  
+  thumbnails.forEach(thumbnail => {
+    thumbnail.addEventListener('click', function() {
+      const imageUrl = this.getAttribute('data-image');
+      mainImage.src = imageUrl;
+      
+      // Remove active class from all thumbnails
+      thumbnails.forEach(thumb => thumb.classList.remove('active'));
+      
+      // Add active class to clicked thumbnail
+      this.classList.add('active');
+    });
+  });
+});
+</script>
