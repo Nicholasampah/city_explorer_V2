@@ -1,9 +1,11 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
+const cityController = require('../controllers/cityController');
 
-// define your routes
-router.get('/', (req, res) => {
-  res.render('cities/search', { title: 'City' });
-});
+// Public routes
+router.get('/', cityController.getCities); // list of all cities
+router.get('/search', cityController.getSearchPage); //Displays the search page 
+router.get('/:id', cityController.getCityById); // Gets a single city
 
-module.exports = router; 
+module.exports = router;
+
