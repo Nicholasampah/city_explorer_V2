@@ -1,0 +1,51 @@
+<div class="city-explorer">
+  <div class="sidebar">
+    <div class="filter-container">
+      <h2>Filter Cities</h2>
+      <form id="filterForm" action="/cities" method="GET">
+        <div class="form-group">
+          <label for="search">Search</label>
+          <input type="text" id="search" name="search" value="{{filters.search}}" placeholder="City or country name...">
+        </div>
+
+        <div class="city-results">
+    <h1>Explore Cities</h1>
+    
+    {{#if cities.length}}
+      <div class="cities-count">{{cities.length}} cities found</div>
+      
+      <div class="city-grid">
+        {{#each cities}}
+          <div class="city-card">
+            <div class="city-image">
+              {{#if this.images.[0]}}
+                <img src="{{this.images.[0]}}" alt="{{this.name}}">
+              {{else}}
+                <div class="placeholder-image">{{this.name.[0]}}</div>
+              {{/if}}
+              <div class="city-weather">
+                {{#if this.weather.temperature}}
+                  <span>{{this.weather.temperature}}°C</span>
+                  <img src="http://openweathermap.org/img/wn/{{this.weather.icon}}.png" alt="{{this.weather.condition}}">
+                {{else}}
+                  <span>--°C</span>
+                {{/if}}
+              </div>
+            </div>
+            <div class="city-content">
+              <h3>{{this.name}}</h3>
+              <p class="city-country">{{this.country}}</p>
+              <p class="city-population">{{this.population}} people</p>
+              <a href="/cities/{{this._id}}" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="no-results">
+        <h3>No cities found</h3>
+        <p>Try adjusting your filters to see more results.</p>
+      </div>
+    {{/if}}
+  </div>
+</div>
