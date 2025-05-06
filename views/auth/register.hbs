@@ -1,0 +1,67 @@
+<div class="auth-container">
+  <div class="auth-form-container">
+    <h1>Create an Account</h1>
+    
+    {{#if error}}
+      <div class="auth-error">
+        {{error}}
+      </div>
+    {{/if}}
+    
+    <form action="/auth/register" method="POST" class="auth-form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="{{name}}" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{email}}" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="8">
+        <small>Password must be at least 8 characters</small>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-block">Register</button>
+    </form>
+    
+    <div class="auth-links">
+      <p>Already have an account? <a href="/auth/login">Login</a></p>
+    </div>
+  </div>
+  
+  <div class="auth-info">
+    <div class="auth-info-content">
+      <h2>Join City Explorer</h2>
+      <p>Create an account to unlock all features of City Explorer, including saving favorite cities and accessing premium content.</p>
+      
+      <div class="auth-features">
+        <div class="auth-feature">
+          <i class="icon-user"></i>
+          <h3>Personal Profile</h3>
+          <p>Create your personalized City Explorer profile.</p>
+        </div>
+        
+        <div class="auth-feature">
+          <i class="icon-bookmark"></i>
+          <h3>Save Preferences</h3>
+          <p>Save your preferences and get personalized recommendations.</p>
+        </div>
+        
+        <div class="auth-feature">
+          <i class="icon-filter"></i>
+          <h3>Advanced Filters</h3>
+          <p>Access advanced filtering and sorting options for cities.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
