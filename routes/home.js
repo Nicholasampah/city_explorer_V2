@@ -4,7 +4,10 @@ const router  = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('home');  // make sure you also have views/home.hbs
+  res.render('home',{ 
+    title: 'City Explorer - Discover Cities Around the World',
+    user: req.session.user
+  });  
 });
 
 module.exports = router;
