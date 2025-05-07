@@ -7,6 +7,88 @@
         <input type="text" name="search" id="search" placeholder="Enter a city or country name..." autofocus>
         <button type="submit" class="btn btn-primary">Search</button>
       </div>
+      
+      <div class="search-options">
+        <h3>Popular searches</h3>
+        <div class="quick-search-buttons">
+          <a href="/cities?continent=Europe" class="btn btn-sm btn-tertiary">European Cities</a>
+          <a href="/cities?population=10000000-" class="btn btn-sm btn-tertiary">Large Cities</a>
+          <a href="/cities?hasAttractions=true" class="btn btn-sm btn-tertiary">Tourist Attractions</a>
+          <a href="/cities?continent=Asia" class="btn btn-sm btn-tertiary">Asian Cities</a>
+          <a href="/cities?sortBy=population&order=desc" class="btn btn-sm btn-tertiary">Most Populous</a>
+        </div>
+      </div>
     </form>
-</div>
+  </div>
+  
+  <div class="advanced-search">
+    <h3>Advanced Search</h3>
+    <p>Use the filters below to refine your search:</p>
+    
+    <form action="/cities" method="GET" class="advanced-search-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="advSearch">City or Country Name</label>
+          <input type="text" id="advSearch" name="search" placeholder="Enter search terms...">
+        </div>
+        
+        <div class="form-group">
+          <label for="advContinent">Continent</label>
+          <select id="advContinent" name="continent">
+            <option value="">All Continents</option>
+            <option value="Africa">Africa</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="North America">North America</option>
+            <option value="Oceania">Oceania</option>
+            <option value="South America">South America</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="advPopulation">Population</label>
+          <select id="advPopulation" name="population">
+            <option value="">Any Population</option>
+            <option value="0-100000">Less than 100,000</option>
+            <option value="100000-500000">100,000 - 500,000</option>
+            <option value="500000-1000000">500,000 - 1 million</option>
+            <option value="1000000-5000000">1 - 5 million</option>
+            <option value="5000000-10000000">5 - 10 million</option>
+            <option value="10000000-">More than 10 million</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="advAttractions">Tourist Attractions</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="advAttractions" name="hasAttractions" value="true">
+            <label for="advAttractions">Has major attractions</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="advSortBy">Sort By</label>
+          <select id="advSortBy" name="sortBy">
+            <option value="name">City Name (A-Z)</option>
+            <option value="population">Population</option>
+            <option value="country">Country</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="advOrder">Order</label>
+          <select id="advOrder" name="order">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
 </div>
