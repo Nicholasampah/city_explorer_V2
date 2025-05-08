@@ -1,6 +1,6 @@
 const City = require("../models/City");
 const weatherService = require("../services/weatherService");
-// const cityDataService = require("../services/cityDataService");
+const cityDataService = require("../services/cityDataService");
 
 /**
  * Get all cities with optional filtering
@@ -49,7 +49,7 @@ exports.getCities = async (req, res) => {
     let cities = await City.find(filter).sort(sort);
     let apiCityAdded = false;
 
-    // If we have a search term and no results, try to fetch from API
+    // If there is a search term and no results, try to fetch from API
     if (search && cities.length === 0) {
       try {
         console.log(

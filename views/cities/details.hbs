@@ -158,7 +158,6 @@
 </div>
 
 <script>
-// Population comparison chart
 document.addEventListener('DOMContentLoaded', function() {
 
   // Get coordinates from data attributes
@@ -181,80 +180,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .bindPopup('{{city.name}}')
         .openPopup();
     }
-
-    
-  // Set up the population chart
-  const ctx = document.getElementById('populationChart').getContext('2d');
-  fetch('/api/cities/population-comparison?cityId={{city._id}}')
-    .then(response => response.json())
-    .then(data => {
-      // Creating a population chart with the current city and other cities in the same continent
-      const chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: data.labels,
-          datasets: [{
-            label: 'Population',
-            data: data.populations,
-            backgroundColor: data.colors,
-            borderColor: data.borderColors,
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return new Intl.NumberFormat().format(value);
-                }
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return new Intl.NumberFormat().format(context.raw) + ' people';
-                }
-              }
-            }
-          }
-        }
-      });
-    })
-    .catch(error => {
-      console.error('Error loading population data:', error);
-      document.getElementById('populationChart').parentNode.innerHTML = '<p>Error loading chart data</p>';
-    });
-  
-  // Load similar cities
-  fetch('/api/cities/similar?cityId={{city._id}}')
-    .then(response => response.json())
-    .then(data => {
-      const similarCitiesContainer = document.getElementById('similarCities');
-      if (data.cities.length > 0) {
-        similarCitiesContainer.innerHTML = '';
-        data.cities.forEach(city => {
-          similarCitiesContainer.innerHTML += `
-            <div class="similar-city">
-              <a href="/cities/${city._id}">
-                <h4>${city.name}</h4>
-                <p>${city.country}</p>
-              </a>
-            </div>
-          `;
-        });
-      } else {
-        similarCitiesContainer.innerHTML = '<p>No similar cities found</p>';
-      }
-    })
-    .catch(error => {
-      console.error('Error loading similar cities:', error);
-      document.getElementById('similarCities').innerHTML = '<p>Error loading similar cities</p>';
-    });
   
   // Initialize image gallery
   const mainImage = document.getElementById('mainImage');
