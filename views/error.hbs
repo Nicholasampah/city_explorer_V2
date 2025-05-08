@@ -1,3 +1,12 @@
-<h1>{{message}}</h1>
-<h2>{{error.status}}</h2>
-<pre>{{error.stack}}</pre>
+<div class="error-container">
+  <div class="error-content">
+    <div class="error-code">{{error.status}}</div>
+    <h1 class="error-title">{{title}}</h1>
+    <p class="error-message">{{error.message}}</p>
+    
+    <div class="error-actions">
+      <a href="/" class="btn btn-primary">Return to Home</a>
+      <button class="btn btn-secondary" onclick="history.back()">Go Back</button>
+    </div>
+  </div>
+</div>
