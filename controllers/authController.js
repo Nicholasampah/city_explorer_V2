@@ -377,9 +377,9 @@ exports.changePassword = async (req, res) => {
 };
 
 /**
- * Add city to favorites
+ * Add city to favourites
  */
-exports.addToFavorites = async (req, res) => {
+exports.addTofavourites = async (req, res) => {
   try {
     const { cityId } = req.params;
     const userId = req.session.user.id;
@@ -392,36 +392,36 @@ exports.addToFavorites = async (req, res) => {
         title: 'City Not Found',
         error: { 
           status: 404, 
-          message: 'The city you are trying to add to favorites does not exist.' 
+          message: 'The city you are trying to add to favourites does not exist.' 
         }
       });
     }
     
-    // Add city to user's favorites (if not already added)
+    // Add city to user's favourites (if not already added)
     await User.findByIdAndUpdate(
       userId,
       { $addToSet: { favoriteCities: cityId } }
     );
     
     // Set success message and redirect
-    req.session.success = `${city.name} added to your favorites!`;
+    req.session.success = `${city.name} added to your favourites!`;
     res.redirect(`/cities/${cityId}`);
   } catch (err) {
-    console.error('Error adding to favorites:', err);
+    console.error('Error adding to favourites:', err);
     res.status(500).render('error', { 
       title: 'Error',
       error: { 
         status: 500, 
-        message: 'Error adding city to favorites. Please try again.' 
+        message: 'Error adding city to favourites. Please try again.' 
       }
     });
   }
 };
 
 /**
- * Remove city from favorites
+ * Remove city from favourites
  */
-exports.removeFromFavorites = async (req, res) => {
+exports.removeFromfavourites = async (req, res) => {
   try {
     const { cityId } = req.params;
     const userId = req.session.user.id;
@@ -429,7 +429,7 @@ exports.removeFromFavorites = async (req, res) => {
     // Find city name for success message (if needed)
     const city = await City.findById(cityId);
     
-    // Remove city from user's favorites
+    // Remove city from user's favourites
     await User.findByIdAndUpdate(
       userId,
       { $pull: { favoriteCities: cityId } }
@@ -437,7 +437,7 @@ exports.removeFromFavorites = async (req, res) => {
     
     // Set success message
     if (city) {
-      req.session.success = `${city.name} removed from your favorites.`;
+      req.session.success = `${city.name} removed from your favourites.`;
     }
     
     // Check if the request wants to redirect back to the profile
@@ -449,22 +449,22 @@ exports.removeFromFavorites = async (req, res) => {
       res.redirect(`/cities/${cityId}`);
     }
   } catch (err) {
-    console.error('Error removing from favorites:', err);
+    console.error('Error removing from favourites:', err);
     res.status(500).render('error', { 
       title: 'Error',
       error: { 
         status: 500, 
-        message: 'Error removing city from favorites. Please try again.' 
+        message: 'Error removing city from favourites. Please try again.' 
       }
     });
   }
 };
 
 /**
- * Check if a city is in user's favorites
+ * Check if a city is in user's favourites
  * Used by API routes to get favorite status
  */
-exports.checkFavoriteStatus = async (req, res) => {
+exports.checkfavouritestatus = async (req, res) => {
   try {
     const { cityId } = req.params;
     

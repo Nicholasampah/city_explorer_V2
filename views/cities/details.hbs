@@ -9,15 +9,15 @@
       {{#if isAuthenticated}}
         <div class="favorite-controls">
           {{#if isFavorite}}
-            <form action="/auth/favorites/{{city._id}}?_method=DELETE" method="POST">
+            <form action="/auth/favourites/{{city._id}}?_method=DELETE" method="POST">
               <button type="submit" class="btn btn-sm btn-favorite active">
-                <i class="icon-heart-filled"></i> Remove from Favorites
+                <i class="icon-heart-filled"></i> Remove from favourites
               </button>
             </form>
           {{else}}
-            <form action="/auth/favorites/{{city._id}}" method="POST">
+            <form action="/auth/favourites/{{city._id}}" method="POST">
               <button type="submit" class="btn btn-sm btn-favorite">
-                <i class="icon-heart"></i> Add to Favorites
+                <i class="icon-heart"></i> Add to favourites
               </button>
             </form>
           {{/if}}

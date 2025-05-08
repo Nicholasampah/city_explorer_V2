@@ -12,8 +12,8 @@ router.get('/logout', authController.logout);
 
 // Protected routes
 router.get('/profile', isAuthenticated, authController.getProfile);
-router.post('/favorites/:cityId', isAuthenticated, authController.addToFavorites);
-router.delete('/favorites/:cityId', isAuthenticated, authController.removeFromFavorites);
+router.post('/favourites/:cityId', isAuthenticated, authController.addTofavourites);
+router.delete('/favourites/:cityId', isAuthenticated, authController.removeFromfavourites);
 router.get('/profile/edit', isAuthenticated, authController.getEditProfilePage);
 router.post('/profile/edit', isAuthenticated, authController.updateProfile);
 router.get('/profile/change-password', isAuthenticated, authController.getChangePasswordPage);

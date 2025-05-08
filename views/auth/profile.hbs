@@ -33,7 +33,7 @@
                 <p class="city-country">{{this.country}}</p>
                 <div class="city-actions">
                   <a href="/cities/{{this._id}}" class="btn btn-sm btn-primary">View</a>
-                  <form action="/auth/favorites/{{this._id}}?_method=DELETE&from=profile" method="POST">
+                  <form action="/auth/favourites/{{this._id}}?_method=DELETE&from=profile" method="POST">
                     <button type="submit" class="btn btn-sm btn-danger">Remove</button>
                   </form>
                 </div>
@@ -43,7 +43,7 @@
         </div>
       {{else}}
         <div class="empty-state">
-          <p>You haven't added any cities to your favorites yet.</p>
+          <p>You haven't added any cities to your favourites yet.</p>
           <a href="/cities" class="btn btn-primary">Explore Cities</a>
         </div>
       {{/if}}
