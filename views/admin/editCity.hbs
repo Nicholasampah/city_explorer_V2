@@ -1,0 +1,238 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Edit City: {{city.name}}</h1>
+    <div class="header-actions">
+      <a href="/admin/cities" class="btn btn-secondary">Back to Cities</a>
+      <a href="/cities/{{city._id}}" class="btn btn-primary">View City Page</a>
+    </div>
+  </div>
+  
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  
+  <div class="admin-form-container">
+    <form action="/cities/{{city._id}}?_method=PUT" method="POST" class="admin-form">
+      <div class="form-section">
+        <h2>Basic Information</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">City Name</label>
+            <input type="text" id="name" name="name" value="{{city.name}}" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" value="{{city.country}}" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="continent">Continent</label>
+            <select id="continent" name="continent" required>
+              <option value="">Select a continent</option>
+              <option value="Africa" {{#if (eq city.continent "Africa")}}selected{{/if}}>Africa</option>
+              <option value="Antarctica" {{#if (eq city.continent "Antarctica")}}selected{{/if}}>Antarctica</option>
+              <option value="Asia" {{#if (eq city.continent "Asia")}}selected{{/if}}>Asia</option>
+              <option value="Europe" {{#if (eq city.continent "Europe")}}selected{{/if}}>Europe</option>
+              <option value="North America" {{#if (eq city.continent "North America")}}selected{{/if}}>North America</option>
+              <option value="Oceania" {{#if (eq city.continent "Oceania")}}selected{{/if}}>Oceania</option>
+              <option value="South America" {{#if (eq city.continent "South America")}}selected{{/if}}>South America</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="population">Population</label>
+            <input type="number" id="population" name="population" min="0" value="{{city.population}}" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="4" required>{{city.description}}</textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="latitude">Latitude</label>
+            <input type="number" id="latitude" name="latitude" step="0.000001" value="{{city.coordinates.latitude}}" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <input type="number" id="longitude" name="longitude" step="0.000001" value="{{city.coordinates.longitude}}" required>
+          </div>
+        </div>
+        
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="hasAttractions" name="hasAttractions" {{#if city.hasAttractions}}checked{{/if}}>
+          <label for="hasAttractions">Has major tourist attractions</label>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h2>Images</h2>
+        <p class="section-helper">Add image URLs for the city (at least one recommended)</p>
+        
+        <div id="imagesContainer">
+          {{#each city.images}}
+            <div class="form-group">
+              <label for="image{{@index}}">Image URL {{add @index 1}}</label>
+              <div class="input-with-button">
+                <input type="url" id="image{{@index}}" name="images" value="{{this}}" placeholder="https://example.com/image.jpg">
+                {{#if @index}}
+                  <button type="button" class="btn btn-sm btn-danger remove-field">Remove</button>
+                {{/if}}
+              </div>
+            </div>
+          {{else}}
+            <div class="form-group">
+              <label for="image0">Image URL 1</label>
+              <input type="url" id="image0" name="images" placeholder="https://example.com/image.jpg">
+            </div>
+          {{/each}}
+        </div>
+        
+        <button type="button" id="addImageBtn" class="btn btn-sm btn-secondary">Add Another Image</button>
+      </div>
+      
+      <div class="form-section">
+        <h2>Landmarks</h2>
+        <p class="section-helper">Add notable landmarks or attractions for this city</p>
+        
+        <div id="landmarksContainer">
+          {{#each city.landmarks}}
+            <div class="landmark-fields">
+              {{#if @index}}
+                <div class="landmark-header">
+                  <h4>Landmark {{add @index 1}}</h4>
+                  <button type="button" class="btn btn-sm btn-danger remove-landmark">Remove</button>
+                </div>
+              {{/if}}
+              
+              <div class="form-group">
+                <label for="landmarkName{{@index}}">Landmark Name</label>
+                <input type="text" id="landmarkName{{@index}}" name="landmarkName[]" value="{{this.name}}">
+              </div>
+              
+              <div class="form-group">
+                <label for="landmarkDescription{{@index}}">Landmark Description</label>
+                <textarea id="landmarkDescription{{@index}}" name="landmarkDescription[]" rows="2">{{this.description}}</textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="landmarkImage{{@index}}">Landmark Image URL (optional)</label>
+                <input type="url" id="landmarkImage{{@index}}" name="landmarkImage[]" value="{{this.imageUrl}}" placeholder="https://example.com/landmark.jpg">
+              </div>
+            </div>
+          {{else}}
+            <div class="landmark-fields">
+              <div class="form-group">
+                <label for="landmarkName0">Landmark Name</label>
+                <input type="text" id="landmarkName0" name="landmarkName[]">
+              </div>
+              
+              <div class="form-group">
+                <label for="landmarkDescription0">Landmark Description</label>
+                <textarea id="landmarkDescription0" name="landmarkDescription[]" rows="2"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="landmarkImage0">Landmark Image URL (optional)</label>
+                <input type="url" id="landmarkImage0" name="landmarkImage[]" placeholder="https://example.com/landmark.jpg">
+              </div>
+            </div>
+          {{/each}}
+        </div>
+        
+        <button type="button" id="addLandmarkBtn" class="btn btn-sm btn-secondary">Add Another Landmark</button>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Update City</button>
+        <a href="/cities/{{city._id}}" class="btn btn-tertiary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add more image fields
+  const imagesContainer = document.getElementById('imagesContainer');
+  const addImageBtn = document.getElementById('addImageBtn');
+  let imageCount = {{city.images.length}} || 1;
+  
+  addImageBtn.addEventListener('click', function() {
+    imageCount++;
+    const newField = document.createElement('div');
+    newField.className = 'form-group';
+    newField.innerHTML = `
+      <label for="image${imageCount}">Image URL ${imageCount}</label>
+      <div class="input-with-button">
+        <input type="url" id="image${imageCount}" name="images" placeholder="https://example.com/image.jpg">
+        <button type="button" class="btn btn-sm btn-danger remove-field">Remove</button>
+      </div>
+    `;
+    imagesContainer.appendChild(newField);
+    
+    // Add event listener to remove button
+    newField.querySelector('.remove-field').addEventListener('click', function() {
+      imagesContainer.removeChild(newField);
+    });
+  });
+  
+  // Add event listeners to existing remove buttons
+  document.querySelectorAll('.remove-field').forEach(button => {
+    button.addEventListener('click', function() {
+      const fieldGroup = this.closest('.form-group');
+      imagesContainer.removeChild(fieldGroup);
+    });
+  });
+  
+  // Add more landmark fields
+  const landmarksContainer = document.getElementById('landmarksContainer');
+  const addLandmarkBtn = document.getElementById('addLandmarkBtn');
+  let landmarkCount = {{city.landmarks.length}} || 1;
+  
+  addLandmarkBtn.addEventListener('click', function() {
+    landmarkCount++;
+    const newFields = document.createElement('div');
+    newFields.className = 'landmark-fields';
+    newFields.innerHTML = `
+      <div class="landmark-header">
+        <h4>Landmark ${landmarkCount}</h4>
+        <button type="button" class="btn btn-sm btn-danger remove-landmark">Remove</button>
+      </div>
+      <div class="form-group">
+        <label for="landmarkName${landmarkCount}">Landmark Name</label>
+        <input type="text" id="landmarkName${landmarkCount}" name="landmarkName[]">
+      </div>
+      <div class="form-group">
+        <label for="landmarkDescription${landmarkCount}">Landmark Description</label>
+        <textarea id="landmarkDescription${landmarkCount}" name="landmarkDescription[]" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="landmarkImage${landmarkCount}">Landmark Image URL (optional)</label>
+        <input type="url" id="landmarkImage${landmarkCount}" name="landmarkImage[]" placeholder="https://example.com/landmark.jpg">
+      </div>
+    `;
+    landmarksContainer.appendChild(newFields);
+    
+    // Add event listener to remove button
+    newFields.querySelector('.remove-landmark').addEventListener('click', function() {
+      landmarksContainer.removeChild(newFields);
+    });
+  });
+  
+  // Add event listeners to existing remove landmark buttons
+  document.querySelectorAll('.remove-landmark').forEach(button => {
+    button.addEventListener('click', function() {
+      const fieldGroup = this.closest('.landmark-fields');
+      landmarksContainer.removeChild(fieldGroup);
+    });
+  });
+});
+</script>

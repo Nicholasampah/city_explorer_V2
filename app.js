@@ -12,12 +12,12 @@ dotenv.config();
 
 // Import routes
 const cityRoutes = require('./routes/cityRoutes');
-// const authRoutes = require('./routes/authRoutes');
-// const adminRoutes = require('./routes/adminRoutes');
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const hbsHelpers = require('./config/handlebars');
 
-// // Import middleware
-// const { isAuthenticated } = require('./middleware/auth');
+// Import middleware
+const { isAuthenticated } = require('./middleware/auth');
 // const errorHandler = require('./middleware/errorHandler');
 
 // Import database configuration
@@ -78,8 +78,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/cities', cityRoutes);
-// app.use('/auth', authRoutes);
-// app.use('/admin', isAuthenticated, adminRoutes);
+app.use('/auth', authRoutes);
+app.use('/admin', isAuthenticated, adminRoutes);
 
 // Error handling middleware
 // app.use(errorHandler);

@@ -1,0 +1,181 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Add New City</h1>
+    <a href="/admin/cities" class="btn btn-secondary">Back to Cities</a>
+  </div>
+  
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+  
+  <div class="admin-form-container">
+    <form action="/cities" method="POST" class="admin-form">
+      <div class="form-section">
+        <h2>Basic Information</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">City Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="continent">Continent</label>
+            <select id="continent" name="continent" required>
+              <option value="">Select a continent</option>
+              <option value="Africa">Africa</option>
+              <option value="Antarctica">Antarctica</option>
+              <option value="Asia">Asia</option>
+              <option value="Europe">Europe</option>
+              <option value="North America">North America</option>
+              <option value="Oceania">Oceania</option>
+              <option value="South America">South America</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="population">Population</label>
+            <input type="number" id="population" name="population" min="0" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="latitude">Latitude</label>
+            <input type="number" id="latitude" name="latitude" step="0.000001" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="longitude">Longitude</label>
+            <input type="number" id="longitude" name="longitude" step="0.000001" required>
+          </div>
+        </div>
+        
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="hasAttractions" name="hasAttractions">
+          <label for="hasAttractions">Has major tourist attractions</label>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h2>Images</h2>
+        <p class="section-helper">Add image URLs for the city (at least one recommended)</p>
+        
+        <div id="imagesContainer">
+          <div class="form-group">
+            <label for="image1">Image URL 1</label>
+            <input type="url" id="image1" name="images" placeholder="https://example.com/image.jpg">
+          </div>
+        </div>
+        
+        <button type="button" id="addImageBtn" class="btn btn-sm btn-secondary">Add Another Image</button>
+      </div>
+      
+      <div class="form-section">
+        <h2>Landmarks</h2>
+        <p class="section-helper">Add notable landmarks or attractions for this city</p>
+        
+        <div id="landmarksContainer">
+          <div class="landmark-fields">
+            <div class="form-group">
+              <label for="landmarkName1">Landmark Name</label>
+              <input type="text" id="landmarkName1" name="landmarkName[]">
+            </div>
+            
+            <div class="form-group">
+              <label for="landmarkDescription1">Landmark Description</label>
+              <textarea id="landmarkDescription1" name="landmarkDescription[]" rows="2"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="landmarkImage1">Landmark Image URL (optional)</label>
+              <input type="url" id="landmarkImage1" name="landmarkImage[]" placeholder="https://example.com/landmark.jpg">
+            </div>
+          </div>
+        </div>
+        
+        <button type="button" id="addLandmarkBtn" class="btn btn-sm btn-secondary">Add Another Landmark</button>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add City</button>
+        <a href="/admin/cities" class="btn btn-tertiary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add more image fields
+  const imagesContainer = document.getElementById('imagesContainer');
+  const addImageBtn = document.getElementById('addImageBtn');
+  let imageCount = 1;
+  
+  addImageBtn.addEventListener('click', function() {
+    imageCount++;
+    const newField = document.createElement('div');
+    newField.className = 'form-group';
+    newField.innerHTML = `
+      <label for="image${imageCount}">Image URL ${imageCount}</label>
+      <div class="input-with-button">
+        <input type="url" id="image${imageCount}" name="images" placeholder="https://example.com/image.jpg">
+        <button type="button" class="btn btn-sm btn-danger remove-field">Remove</button>
+      </div>
+    `;
+    imagesContainer.appendChild(newField);
+    
+    // Add event listener to remove button
+    newField.querySelector('.remove-field').addEventListener('click', function() {
+      imagesContainer.removeChild(newField);
+    });
+  });
+  
+  // Add more landmark fields
+  const landmarksContainer = document.getElementById('landmarksContainer');
+  const addLandmarkBtn = document.getElementById('addLandmarkBtn');
+  let landmarkCount = 1;
+  
+  addLandmarkBtn.addEventListener('click', function() {
+    landmarkCount++;
+    const newFields = document.createElement('div');
+    newFields.className = 'landmark-fields';
+    newFields.innerHTML = `
+      <div class="landmark-header">
+        <h4>Landmark ${landmarkCount}</h4>
+        <button type="button" class="btn btn-sm btn-danger remove-landmark">Remove</button>
+      </div>
+      <div class="form-group">
+        <label for="landmarkName${landmarkCount}">Landmark Name</label>
+        <input type="text" id="landmarkName${landmarkCount}" name="landmarkName[]">
+      </div>
+      <div class="form-group">
+        <label for="landmarkDescription${landmarkCount}">Landmark Description</label>
+        <textarea id="landmarkDescription${landmarkCount}" name="landmarkDescription[]" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="landmarkImage${landmarkCount}">Landmark Image URL (optional)</label>
+        <input type="url" id="landmarkImage${landmarkCount}" name="landmarkImage[]" placeholder="https://example.com/landmark.jpg">
+      </div>
+    `;
+    landmarksContainer.appendChild(newFields);
+    
+    // Add event listener to remove button
+    newFields.querySelector('.remove-landmark').addEventListener('click', function() {
+      landmarksContainer.removeChild(newFields);
+    });
+  });
+});
+</script>

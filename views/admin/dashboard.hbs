@@ -1,0 +1,170 @@
+<div class="admin-container">
+  <h1>Admin Dashboard</h1>
+  
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-value">{{stats.cityCount}}</div>
+      <div class="stat-label">Cities</div>
+      <div class="stat-icon">
+        <i class="icon-city"></i>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-value">{{stats.userCount}}</div>
+      <div class="stat-label">Users</div>
+      <div class="stat-icon">
+        <i class="icon-users"></i>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-value">{{stats.attractionsCount}}</div>
+      <div class="stat-label">Cities with Attractions</div>
+      <div class="stat-icon">
+        <i class="icon-attractions"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="admin-sections">
+    <div class="admin-section">
+      <h2>City Distribution by Continent</h2>
+      <div class="chart-container">
+        <canvas id="continentChart"></canvas>
+      </div>
+    </div>
+    
+    <div class="admin-section">
+      <h2>Recent Cities</h2>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>City</th>
+              <th>Country</th>
+              <th>Added On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each recentCities}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.country}}</td>
+                <td>{{formatDate this.createdAt}}</td>
+                <td>
+                  <div class="table-actions">
+                    <a href="/cities/{{this._id}}" class="btn btn-sm btn-primary">View</a>
+                    <a href="/cities/{{this._id}}/edit" class="btn btn-sm btn-secondary">Edit</a>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+        <div class="admin-actions">
+          <a href="/admin/cities" class="btn btn-primary">View All Cities</a>
+          <a href="/admin/cities/add" class="btn btn-secondary">Add New City</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="admin-section">
+      <h2>Recent Users</h2>
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Registered On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each recentUsers}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>
+                <td>
+                  <span class="badge {{#if (eq this.role 'admin')}}badge-admin{{else}}badge-user{{/if}}">
+                    {{this.role}}
+                  </span>
+                </td>
+                <td>{{formatDate this.createdAt}}</td>
+                <td>
+                  <div class="table-actions">
+                    <a href="/admin/users/{{this._id}}/edit" class="btn btn-sm btn-secondary">Edit</a>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+        <div class="admin-actions">
+          <a href="/admin/users" class="btn btn-primary">View All Users</a>
+          <a href="/admin/users/add" class="btn btn-secondary">Add New User</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set up continent chart
+  const continentCtx = document.getElementById('continentChart').getContext('2d');
+  const continentData = {
+    labels: [{{#each stats.continentStats}}'{{this._id}}',{{/each}}],
+    datasets: [{
+      label: 'Cities by Continent',
+      data: [{{#each stats.continentStats}}{{this.count}},{{/each}}],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 206, 86, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(153, 102, 255, 0.7)',
+        'rgba(255, 159, 64, 0.7)',
+        'rgba(199, 199, 199, 0.7)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(199, 199, 199, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+  
+  new Chart(continentCtx, {
+    type: 'pie',
+    data: continentData,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = Math.round((value / total) * 100);
+              return `${label}: ${value} cities (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+});
+</script>
