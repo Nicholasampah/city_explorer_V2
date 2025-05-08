@@ -18,7 +18,7 @@ const hbsHelpers = require('./config/handlebars');
 
 // Import middleware
 const { isAuthenticated } = require('./middleware/auth');
-// const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require('./middleware/errorHandler');
 
 // Import database configuration
 const connectDB = require('./config/db');
@@ -82,7 +82,7 @@ app.use('/auth', authRoutes);
 app.use('/admin', isAuthenticated, adminRoutes);
 
 // Error handling middleware
-// app.use(errorHandler);
+app.use(errorHandler);
 
 // 404 page
 app.use((req, res) => {

@@ -1,2 +1,4 @@
 node_modules
 how-to-use
+npm-debug.log
+.env
