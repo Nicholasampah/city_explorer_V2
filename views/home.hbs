@@ -8,3 +8,57 @@
     </div>
   </div>
 </section>
+
+<section class="features">
+  <div class="feature-card">
+    <div class="feature-icon">
+      <i class="icon-search"></i>
+    </div>
+    <h3>Find Cities</h3>
+    <p>Search for cities by name, country, or continent. Filter cities based on population and tourist attractions.</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon">
+      <i class="icon-info"></i>
+    </div>
+    <h3>Detailed Information</h3>
+    <p>View comprehensive information about cities, including population, key landmarks, and attractions.</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon">
+      <i class="icon-weather"></i>
+    </div>
+    <h3>Weather Updates</h3>
+    <p>Get current weather conditions for any city in our database, updated in real-time.</p>
+  </div>
+  
+  <div class="feature-card">
+    <div class="feature-icon">
+      <i class="icon-chart"></i>
+    </div>
+    <h3>Data Visualization</h3>
+    <p>Explore interactive charts and maps to visualize city data and make comparisons.</p>
+  </div>
+</section>
+
+{{#if isAuthenticated}}
+  <section class="cta">
+    <h2>Welcome Back, {{user.name}}!</h2>
+    <p>Continue exploring your favorite cities or discover new ones.</p>
+    <div class="cta-buttons">
+      <a href="/auth/profile" class="btn btn-primary">View Profile</a>
+      <a href="/cities" class="btn btn-secondary">Explore Cities</a>
+    </div>
+  </section>
+{{else}}
+  <section class="cta">
+    <h2>Ready to Explore?</h2>
+    <p>Create an account to save your favorite cities and get personalized recommendations.</p>
+    <div class="cta-buttons">
+      <a href="/auth/register" class="btn btn-primary">Sign Up</a>
+      <a href="/auth/login" class="btn btn-secondary">Login</a>
+    </div>
+  </section>
+{{/if}}

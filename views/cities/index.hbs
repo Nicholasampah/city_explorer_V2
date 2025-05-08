@@ -7,8 +7,59 @@
           <label for="search">Search</label>
           <input type="text" id="search" name="search" value="{{filters.search}}" placeholder="City or country name...">
         </div>
-
-        <div class="city-results">
+        
+        <div class="form-group">
+          <label for="continent">Continent</label>
+          <select id="continent" name="continent">
+            <option value="">All Continents</option>
+            {{#each continents}}
+              <option value="{{this}}" {{#if (eq ../filters.continent this)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="population">Population</label>
+          <select id="population" name="population">
+            <option value="">Any Population</option>
+            <option value="0-100000" {{#if (eq filters.population "0-100000")}}selected{{/if}}>Less than 100,000</option>
+            <option value="100000-500000" {{#if (eq filters.population "100000-500000")}}selected{{/if}}>100,000 - 500,000</option>
+            <option value="500000-1000000" {{#if (eq filters.population "500000-1000000")}}selected{{/if}}>500,000 - 1 million</option>
+            <option value="1000000-5000000" {{#if (eq filters.population "1000000-5000000")}}selected{{/if}}>1 - 5 million</option>
+            <option value="5000000-10000000" {{#if (eq filters.population "5000000-10000000")}}selected{{/if}}>5 - 10 million</option>
+            <option value="10000000-" {{#if (eq filters.population "10000000-")}}selected{{/if}}>More than 10 million</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="hasAttractions">Tourist Attractions</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="hasAttractions" name="hasAttractions" value="true" {{#if (eq filters.hasAttractions "true")}}checked{{/if}}>
+            <label for="hasAttractions">Has major attractions</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="sortBy">Sort By</label>
+          <select id="sortBy" name="sortBy">
+            <option value="name" {{#if (eq filters.sortBy "name")}}selected{{/if}}>City Name (A-Z)</option>
+            <option value="population" {{#if (eq filters.sortBy "population")}}selected{{/if}}>Population</option>
+            <option value="country" {{#if (eq filters.sortBy "country")}}selected{{/if}}>Country</option>
+          </select>
+          
+          <select id="order" name="order">
+            <option value="asc" {{#if (eq filters.order "asc")}}selected{{/if}}>Ascending</option>
+            <option value="desc" {{#if (eq filters.order "desc")}}selected{{/if}}>Descending</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="/cities" class="btn btn-secondary">Clear Filters</a>
+      </form>
+    </div>
+  </div>
+  
+  <div class="city-results">
     <h1>Explore Cities</h1>
     
     {{#if cities.length}}
